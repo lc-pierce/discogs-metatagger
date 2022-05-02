@@ -54,15 +54,11 @@ class TagWindow(Tk):
         # List that holds the file paths for loaded music files
         self.added_files = []
         
-        # Create the main program widgets
         self.PopulateWindow()
     
     
-    # AddFiles() is called by the 'Select Files To Edit' button. This function
-    #   allows a user to add music files to the treeview widget
-    # Args:     none
-    # Returns:  none
     def AddFiles(self):
+        """Add music files to the treeview for editing."""
         
         _types = (('FLAC', '*.flac'), ('MP3', '*.mp3'))
         files = list(filedialog.askopenfilenames(filetypes=_types))
@@ -94,13 +90,11 @@ class TagWindow(Tk):
             self.added_files.append(file)
     
     
-    # CopyTracklist() is called by the 'Send Track Titles' button attached to
-    #   the listbox containing the release's track titles. This function copies
-    #   the track titles to the loaded files in order from top to bottom in the
-    #   treeview widget
-    # Args:     none
-    # Returns:  none
     def CopyTracklist(self):
+        """Copy track titles from the listbox to the music files.
+        
+        This function is called by the 'Send Track Titles' button.
+        """
         
         if not self.files_loaded:
             return
@@ -141,11 +135,11 @@ class TagWindow(Tk):
             self.RemoveFiles(bad_files)
     
     
-    # CopyTrackNumbers() is called by the 'Fill Track Numbers' button. This
-    #   function track numbers in sequential order from top to bottom
-    # Args:     none
-    # Returns:  none
     def CopyTrackNumbers(self):
+        """Insert track numbers into file metadata.
+        
+        This function is called by the 'Fill Track Numbers' button.
+        """
         
         if not self.files_loaded:
             return
@@ -174,13 +168,15 @@ class TagWindow(Tk):
             self.RemoveFiles(bad_files)
     
     
-    # CreateButton() initializes and returns a tkinter Button object
-    # Args:     parent = the button's parent object
-    #           _text = the text displayed on the button
-    #           _cmd = the function called by pressing the button
-    #           big_tag = boolean to determine size of button features
-    # Returns:  a tkinter Button
     def CreateButton(self, parent, _text, _cmd, big_tag):
+        """Initialize and return a tkinter Button widget.
+        
+        Arguments:
+        parent -- the Button's parent object
+        _text -- the text displayed on the Button
+        _cmd -- the function called by the Button
+        big_tag -- boolean indicator for the size of Button features
+        """
         
         # 'big_tag' buttons are all the buttons not directly tied to sending
         #   individual metadata tags
@@ -200,23 +196,25 @@ class TagWindow(Tk):
                          takefocus=0)
     
     
-    # CreateEntry() initializes and returns a tkinter text Entry object
-    # Args:     parent = the entry box's parent frame
-    #           _var = the variable used to retrieve the box's contents
-    #           _width = the width of the entry box
-    # Returns:  a tkinter Entry box
     def CreateEntry(self, parent, _var, _width=30):
+        """Initialize and return a tkinter Entry widget.
+        
+        Arguments:
+        parent -- the Entry's parent frame
+        _var -- variable used to retrieve Entry's contents
+        _width -- width of the Entry widget
+        """
     
         return tk.Entry(parent, textvariable=_var, width=_width,
                         font=self.font)
     
     
-    # CreateFileTree() initializes the Treeview widget that holds the music
-    #   files to be edited. Files are selected by clicking the 'Select Files
-    #   To Edit' button located above the widget
-    # Args:     parent = the treeview's parent frame
-    # Returns:  none
     def CreateFileTree(self, parent):
+        """Initialize the Treeview used to display the loaded music files.
+        
+        Arguments:
+        parent -- the Treeview's parent frame
+        """
         
         self.tree = ttk.Treeview(parent, columns=('#1', '#2', '#3',
                                                   '#4', '#5', '#6',
@@ -255,20 +253,25 @@ class TagWindow(Tk):
         self.tree.bind('<Double-Button-1>', self.DoubleClick)
     
     
-    # CreateFrame() initializes and returns a tkinter Frame object
-    # Args:     parent = the frame's parent object
-    # Returns:  a tkinter Frame
     def CreateFrame(self, parent):
+        """Initialize and return a tkinter Frame widget.
+        
+        Arguments:
+        parent -- the Frame's parent object
+        """
     
         return tk.Frame(parent, padx=5, pady=5, bg=self.bg)
     
     
-    #CreateLabel() initializes and returns a tkinter Label object
-    # Args:     parent = the label's parent frame
-    #           _text = the text displayed on the label
-    #           _font = the font used by the label's text
-    # Returns:  a tkinter Label
     def CreateLabel(self, parent, _text, _font=None, _anchor='w'):
+        """Initialize and return a tkinter Label widget.
+        
+        Arguments:
+        parent -- the Label's parent frame
+        _text -- the text displayed on the Label
+        _font -- the font used by the Label's text
+        _anchor -- text positioning (default w, i.e., left-hand side
+        """
     
         if not _font:
             _font = self.font
@@ -277,11 +280,12 @@ class TagWindow(Tk):
                         bg=self.bg, fg=self.fg, width=10, padx=5, pady=5)
     
     
-    # CreateLoadButtons() initializes a button to load music files into the
-    #   program and a button copy all metadata entry fields to those files
-    # Args:     parent = the buttons' parent frame
-    # Returns:  none
     def CreateLoadButtons(self, parent):
+        """Initialize buttons used to load music files and copy all metadata.
+        
+        Arguments:
+        parent -- the parent object for the two buttons
+        """
     
         frame = self.CreateFrame(parent)
         frame.pack(fill='both', expand='true')
@@ -295,22 +299,25 @@ class TagWindow(Tk):
         add_button.pack(side='right', expand='true')
     
     
-    # CreateMetadataFields() initializes a set of widgets for each metadata tag
-    #   supported by the program
-    # Args:     text_parent = parent frame for text-based fields
-    #           number_parent = parent frame for numerically-based fields
-    # Return:   none
     def CreateMetadataFields(self, text_parent, number_parent):
+        """Initialize set of widgets for each editable metadata tag.
         
-        # CreateField() initializes a frame, label, text entry box, and button
-        #   for all of the metadata tag fields
-        # Args:     parent = the parent object for the widgets' frame
-        #           label_text = the text to display on the label widget
-        #           tag = the metadata tag to attach to the button's command
-        #           entry_var = the text variable attached to the entry box
-        #           e_width = the width of the entry box
-        # Returns:  none
+        Arguments:
+        text_parent -- parent object for text-based tags
+        number_parent -- parent object for number-based tags
+        """
+        
+        
         def CreateField(parent, label_text, tag, entry_var, e_width=None):
+            """Initialize a Frame, Label, Entry, & Button for a metadata tag.
+            
+            Arguments:
+            parent -- parent object for the Frame
+            label_text -- text displayed on the Label
+            tag -- metadata tag attached to the Button's command function
+            entry_var -- retrieval variable for Entry's contents
+            e_width -- width of the Entry widget
+            """
             
             if not e_width:
                 e_width = 30
@@ -358,14 +365,15 @@ class TagWindow(Tk):
         fill_button.pack(fill = 'x')
     
     
-    # CreateTracklistView() initializes the widgets that hold the track title
-    #   data pulled from Discogs. The titles are held in a listbox object and
-    #   can be copied to the music files using the button attached to the
-    #   labelframe widget
-    # Args:     parent = the widgets' parent frame
-    # Returns:  none
     def CreateTracklistView(self, parent):
+        """Initialize Listbox widget that holds track titles.
         
+        Arguments:
+        parent -- the parent frame for all widgets
+        """
+        
+        # Place the listbox within a labelframe with an attached button that
+        #   sends the contents to the files
         button = self.CreateButton(parent, 'Send Track Titles',
                                    self.CopyTracklist, big_tag=False)
         labelframe = tk.LabelFrame(parent, labelwidget=button, bg=self.bg)
@@ -381,11 +389,12 @@ class TagWindow(Tk):
         scrollbar['command'] = self.listbox.yview
     
     
-    # CreateURLFields() initializes the group of widgets associated with
-    #   loading a release from a given Discogs URL
-    # Args:     parent = the widgets' parent frame
-    # Returns:  none
     def CreateURLFields(self, parent):
+        """Initialize a Label, Entry, & Buttons to load a Discogs release URL.
+        
+        Arguments:
+        parent -- parent frame for all widgets
+        """
         
         label = self.CreateLabel(parent, 'Enter Discogs URL:',
                                  _font=('Microsoft Tai Le', 16, 'bold'),
@@ -410,12 +419,13 @@ class TagWindow(Tk):
         reset_button.pack(side='right')
     
     
-    # DoubleClick() is an event function that fires when the user double-clicks
-    #   on a cell within the treeview widget. This function creates a pop-up
-    #   window that allows the user to edit the contents of the chosen cell
-    # Args:     event = the invoking event
-    # Returns:  none
     def DoubleClick(self, event):
+        """Edit the contents of a Treeview cell.
+        
+        This is an event function bound to double-clicking within the Treeview
+            widget. It becomes unbound when the edit window appears and gets
+            re-bound when the window is destroyed.
+        """
     
         # Retrieve the chosen row and column
         self.clicked_column = self.tree.identify_column(event.x)
@@ -454,12 +464,13 @@ class TagWindow(Tk):
         self.edit_window.bind('<Destroy>', self.RestoreDoubleClick)
     
     
-    # FillEntrys() is called by the 'Click To Load URL Data' button. This
-    #   function uses the Discogs release number obtained via the 'Validate
-    #   URL' function to populate the metadata text entry and listbox widgets
-    # Args:     none
-    # Returns:  none
     def FillEntrys(self):
+        """Populate metadata Entry widgets with corresponding Discogs info.
+        
+        This function is called by the 'Click To Load URL Data' button. It
+            uses the Discogs client API to pull information for each metadata
+            tag.
+        """
         
         try:
             release = self.client.release(self.release_number)
@@ -487,12 +498,13 @@ class TagWindow(Tk):
         self.data_loaded = True
     
     
-    # GetUserToken() is called by the 'Click To Load URL Data' button if the
-    #   user hasn't provided their Discogs token yet. This function creates a
-    #   pop-up window that allows the user to provide the token
-    # Args:     none
-    # Returns:  none
     def GetUserToken(self):
+        """Initialize a window to retrieve the user's Discogs API token.
+        
+        This function is called by the 'Click To Load URL Data' button the
+            first time the button is pressed. A user token is necessary to
+            enable retrieving information from the Discogs database.
+        """
     
         token_h = 100
         token_w = 300
@@ -521,13 +533,12 @@ class TagWindow(Tk):
         button.pack(fill='both', expand='true')
     
     
-    # InitializeClient() is called by the 'Submit' button on the user token
-    #   retrieval window. This function retrieves the text from the entry box
-    #   and uses it to initialize the Discogs API client. If successful, it
-    #   destroys the user token window and populates the main window widgets
-    # Args:     none
-    # Return:   none
     def InitializeClient(self):
+        """Initialize the Discogs API client.
+        
+        This function is called by the 'Submit' button located on the window
+            created by GetUserToken().
+        """
         
         token = self.user_token.get().lstrip().rstrip()
         if not token:
@@ -544,12 +555,8 @@ class TagWindow(Tk):
             self.FillEntrys()
     
     
-    # PopulateWindow() is called when the program first launches. This function
-    #   initializes all of the main window layout frames and calls the
-    #   functions to initialize the widgets
-    # Args:     none
-    # Returns:  none
     def PopulateWindow(self):
+        """Initialize the main window Frames and their widget contents."""
         
         # Create a frame that covers the entire window
         self.main_frame = self.CreateFrame(self)
@@ -588,12 +595,14 @@ class TagWindow(Tk):
         self.CreateFileTree(file_tree_frame)
     
     
-    # RemoveFiles() is called any time an operation encounters one or more
-    #   files that can't be accessed. This function removes those files from
-    #   the files list and the treeview object
-    # Args:     index_list = a list containing the indeces of bad files
-    # Returns:  none
     def RemoveFiles(self, index_list):
+        """Remove inaccessible files from the Treeview widget.
+        
+        This function is called whenever another function attempts to edit
+            metadata information and is unable to access/alter the file.
+        Arguments:
+        index_list -- list of files list indeces that were inaccessible
+        """
         
         msg = 'Inaccessible files were found in the files list. Would\n' \
               'you like to remove these files from the program?'
@@ -618,13 +627,11 @@ class TagWindow(Tk):
             self.tree.delete(iid)
     
     
-    # ResetWindow() is called by the 'Reset Window' button. This function
-    #   resets all global variables to their initial values and clears the
-    #   contents of all text entry boxes, the listbox widget, and the treeview
-    #   widget
-    # Args:     none
-    # Returns:  none
     def ResetWindow(self):
+        """Return all window widgets and global vars to their initial states.
+        
+        This function is called by the 'Reset Window' button.
+        """
         
         # Reset gobal variables
         self.data_loaded = False
@@ -647,22 +654,20 @@ class TagWindow(Tk):
             self.tree.delete(iid)
     
     
-    # RestoreDoubleClick() is called after the edit window that appears when
-    #   double-clicking a treeview cell gets destroyed. This function re-binds
-    #   the double-click function.
-    # Args:     event = the invoking event
-    # Returns:  none
     def RestoreDoubleClick(self, event):
+        """Re-bind double-clicking to edit Treeview cells."""
         
         self.tree.bind('<Double-Button-1>', self.DoubleClick)
     
     
-    # SendData() is called by the 'Send Data' buttons beside the various text
-    #   entry boxes. This function uses the given tag to retrieve the entry box
-    #   contents and update the appropriate metadata tag for all loaded files
-    # Args:     tag = the metadata tag to update
-    # Returns:  none
     def SendData(self, tag):
+        """Copy data from Entry widgets to loaded music files.
+        
+        This function is called by every button created by
+            CreateMetadataFields().
+        Arguments:
+            tag -- the string of the metadata tag name to update
+        """
         
         # If no files present to update, take no action
         if not self.files_loaded:
@@ -708,15 +713,11 @@ class TagWindow(Tk):
             self.RemoveFiles(bad_files)
     
     
-    # SortByTrackNumber() is called when the user clicks on the track number
-    #   column heading '#'. This function sorts the files within the treeview
-    #   in ascending track number order
-    # Args:     none
-    # Returns:  none
     def SortByTrackNumber(self):
+        """Sort Treeview files by increasing track number column order."""
         
-        # Function used as the key to the sort() method
         def SortFunc(e):
+            """Return int value for track number column cell."""
             return int(self.tree.set(e, column='#1'))
         
         # Retrieve the iid for every treeview row
@@ -751,12 +752,12 @@ class TagWindow(Tk):
                 self.tree.item(iid, tags='oddrow')
     
     
-    # UpdateAll() is called by the 'Send All Data To Files' button. This
-    #   function's behavior is identical to clicking the 'Send Data' button for
-    #   every field. This function does not update the track titles
-    # Args:     none
-    # Returns:  none
     def UpdateAll(self):
+        """Copy all data from metadata Entry widgets to loaded music files.
+        
+        This function is called by the 'Send All Data To Files' button. It does
+            not send the track titles from the Listbox.
+        """
         
         if not self.files_loaded:
             return
@@ -797,13 +798,12 @@ class TagWindow(Tk):
                 self.RemoveFiles(bad_files)
     
     
-    # UpdateField() is called by the 'Update Field' button on the window that
-    #   pops up when the user double-clicks a treeview row to edit it. This
-    #   function passes the new value to the UpdateField() method in
-    #   FileData.py before destroying the pop-up window
-    # Args:     none
-    # Returns:  none
     def UpdateField(self):
+        """Edit the contents of a single, user-clicked Treeview cell.
+        
+        This function is called by the 'Update Field' button located on the
+            pop-up window created by the DoubleClick() function.
+        """
         
         _value = self.new_value.get().lstrip().rstrip()
         if not _value:
@@ -836,13 +836,13 @@ class TagWindow(Tk):
         self.edit_window.destroy()
     
     
-    # ValidateURL() is called by the 'Click To Load URL Data' button. This
-    #   funtion retrieves the URL entered into the entry box and isolates the
-    #   release number. This release number gets passed to FillEntrys() to load
-    #   the data
-    # Args:     none
-    # Returns:  none
     def ValidateURL(self):
+        """Validate the contents of the URL Entry widget.
+        
+        This function is called by the 'Click To Load URL Data' button. It
+            tests that the data entered into the Entry widget is the URL for
+            a specific Discogs release. It then isolates the release's ID.
+        """
         
         # Prevent loading new data until the window gets reset
         if self.data_loaded:
