@@ -17,12 +17,15 @@ from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
 
 
-# ConvertColToTag() is called when updating a treeview volumn by
-#   double-clicking the cell. This function converts the column ID selected by
-#   the user into the corresponding metadata tag
-# Args:     column = the column containing the cell that the user is editing
-# Returns:  the metadata tag associated with the column ID
 def ConvertColToTag(column):
+    """Convert a Treeview column heading to corresponding metadata tag.
+    
+    Arguments:
+    column -- the column heading ID to convert
+    
+    Returns:
+    The metadata tag corresponding to the Treeview column
+    """
 
     if column == '#1':
         return 'TrackNumber'
@@ -42,12 +45,15 @@ def ConvertColToTag(column):
         return 'Organization'
 
 
-# ConvertTagToCol() is called when updating metadata tags. This function
-#   converts the metadata tag to the corresponding column ID within the
-#   treeview object
-# Args:     tag = the metadata tag being updated
-# Returns:  the treeview column ID associated with the metadata tag
 def ConvertTagToCol(tag):
+    """Convert a metadata tag heading to corresponding Treeview column.
+    
+    Arguments:
+    tag -- the metadata tag to convert
+    
+    Returns:
+    The Treeview column heading corresponding to the metadata tag
+    """
 
     if tag == 'TrackNumber':
         return '#1'
@@ -67,15 +73,18 @@ def ConvertTagToCol(tag):
         return '#9'
 
 
-# ParseFile() is called when music files are added to the program's window.
-#   This function attempts to load a file's metadata using Mutagen, retrieves
-#   the metadata information, and adds the file to the treeview widget
-# Args:     filename = the file to load
-#           tree = the treeview widget
-#           index = the file's index within the added files list
-# Returns:  True and 'None' if all operations were successful
-#           False and a filename if the file failed to load via Mutagen
 def ParseFile(filename, tree, index):
+    """Load a music file and retrieve its metadata information.
+    
+    Arguments:
+    filename -- the music file to load
+    tree -- the Treeview widget (to insert the metadata info)
+    index -- the file's index within the list (to create the Treeview IID)
+    
+    Returns:
+    'True' and 'None' if successful
+    'False' and the filename if a file is inaccessible
+    """
     
     # Attempt to load the song using Mutagen
     try:
@@ -172,16 +181,18 @@ def ParseFile(filename, tree, index):
     return True, None
 
 
-# UpdateMetadata() is called whenever the main program performs an operation
-#   that alters the metadata of a file. This function updates the provided
-#   metadata tag for the provided song and retrieves the treeview column
-#   that needs to be update
-# Args:     file = the file to update
-#           tag = string containing the metadata tag to update
-#           update_string = new value for the metadata tag
-# Returns:  True and a column heading ID if successful
-#           False and the filename otherwise
 def UpdateMetadata(file, tag, update_string):
+    """Update a specific metadata tag for a given file.
+    
+    Arguments:
+    file -- the file to be updated
+    tag -- the metadata tag to update
+    update_string -- the new value for the metadata tag
+    
+    Returns:
+    'True' and the column heading ID for the tag if successful
+    'False' and the filename if a file is inaccessible
+    """
     
     try:
         if ('.flac' in file or '.FLAC' in file):
@@ -202,14 +213,18 @@ def UpdateMetadata(file, tag, update_string):
     return True, col_no
 
 
-# UpdateTrackNumbers() is used to update the track number for loaded music
-#   files
-# Args:     file = filename of the file to update
-#           iid = the file's treeview ID
-#           track_no = the track number
-# Returns:  True and 'None' if all operations were successful
-#           False and the inaccesible filename otherwise
 def UpdateTrackNumbers(file, iid, track_no):
+    """Update the track number metadata tag for the given file.
+    
+    Arguments:
+    file -- the file to update
+    iid -- the file's Treeview IID
+    track_no -- the track number to add to the file's metadata
+    
+    Returns:
+    'True' and 'None' if the operation is successful
+    'False' and the filename if a file is inaccessible
+    """
     
     try:
         if ('.flac' in file or '.FLAC' in file):
@@ -228,14 +243,19 @@ def UpdateTrackNumbers(file, iid, track_no):
     return True, None
 
 
-# UpdateTrackTitle() is used to update the track title for loaded music files
-# Args:     file = filename of the file to update
-#           title = the track title string
-#           iid = the file's treeview ID
-#           index = counter that tracks the current file's track number
-# Returns:  True and the song title if the update was successful
-#           False and the inaccessible filename otherwise
 def UpdateTrackTitle(file, title, iid, index):
+    """Update the track title metadata tag for a given file.
+    
+    Arguments:
+    file -- the file to update
+    title -- the title string pulled from the Listbox widget
+    iid -- the file's Treeview IID
+    index -- counter that tracks the file's track number
+    
+    Returns:
+    'True' and the isolated track title string if successful
+    'False' and the filename if a file is inaccessible
+    """
     
     try:
         if ('.flac' in file or '.FLAC' in file):
